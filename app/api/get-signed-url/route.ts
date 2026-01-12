@@ -22,7 +22,9 @@ export async function GET() {
     );
 
     if (!response.ok) {
-      throw new Error('Failed to get signed URL');
+      const errorText = await response.text();
+      console.error('ElevenLabs API Error:', response.status, response.statusText, errorText);
+      throw new Error(`Failed to get signed URL: ${response.status} ${errorText}`);
     }
 
     const data = await response.json();

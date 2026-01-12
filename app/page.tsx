@@ -48,13 +48,15 @@ export default function Home() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-900 via-black to-black opacity-80" />
 
       {/* Header */}
-      <div className="z-10 absolute top-8 text-center">
-        <h1 className="text-2xl font-bold tracking-[0.2em] text-zinc-500 uppercase">Exit Room Bot</h1>
-        <div className="text-xs text-zinc-700 mt-2 tracking-widest">SYSTEM READY</div>
+      <div className="z-10 mt-12 mb-12 text-center">
+        <h1 className="text-4xl md:text-6xl font-black tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-600 uppercase drop-shadow-lg">
+          Exit Room Bot
+        </h1>
+        <div className="text-sm md:text-base text-cyan-500/80 mt-4 tracking-[0.5em] font-light">SYSTEM READY</div>
       </div>
 
       {/* Main Control Area */}
-      <div className="z-10 relative">
+      <div className="z-10 relative flex-1 flex items-center justify-center">
         <motion.button
           onClick={isConnected || isConnecting ? handleStop : handleStart}
           disabled={isConnecting}
