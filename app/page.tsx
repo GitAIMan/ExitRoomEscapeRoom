@@ -3,12 +3,12 @@
 import { useConversation } from '@elevenlabs/react';
 import { useCallback, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Power, Mic, Square, Activity, Radio } from 'lucide-react';
+import { Power, Square, Activity } from 'lucide-react';
 
 export default function Home() {
   const conversation = useConversation();
   const { status, isSpeaking } = conversation;
-  
+
   const [connectionError, setConnectionError] = useState<string | null>(null);
 
   const handleStart = useCallback(async () => {
@@ -36,110 +36,69 @@ export default function Home() {
   const isConnecting = status === 'connecting';
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-8 bg-black text-white relative overflow-hidden font-mono selection:bg-cyan-500/30">
-      
-      {/* Dynamic Background */}
+    <main className="flex min-h-screen flex-col items-center justify-center bg-black text-white relative overflow-hidden font-sans selection:bg-cyan-500/30">
+
+      {/* Background Ambience (Subtle) */}
       <div className="absolute inset-0 z-0">
-        <div className={`absolute inset-0 transition-opacity duration-1000 ${isConnected ? 'opacity-40' : 'opacity-20'}`}>
-          <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-[120px] ${isConnected ? 'bg-cyan-900/40' : 'bg-zinc-900/40'}`} />
-          {isConnected && (
-            <motion.div 
-              animate={{ 
-                scale: isSpeaking ? [1, 1.2, 1] : 1,
-                opacity: isSpeaking ? 0.6 : 0.3
-              }}
-              transition={{ duration: 0.5 }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-cyan-500/20 blur-[100px]"
-            />
-          )}
-        </div>
-        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(20,20,20,1)_0%,rgba(0,0,0,1)_100%)]" />
       </div>
 
-      {/* Header */}
-      <header className="z-10 w-full max-w-5xl flex justify-between items-center pt-8">
-        <div className="flex items-center gap-2">
-          <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-cyan-500 animate-pulse' : 'bg-red-500'}`} />
-          <span className="text-xs tracking-[0.2em] text-zinc-500 uppercase">
-            {isConnected ? 'System Online' : 'System Standby'}
-          </span>
-        </div>
-        <div className="text-xs text-zinc-600 tracking-widest">V 1.0.4</div>
-      </header>
+      {/* Main Content Container */}
+      <div className="z-10 flex flex-col items-center gap-16">
 
-      {/* Main Content */}
-      <div className="z-10 flex-1 flex flex-col items-center justify-center gap-12 w-full">
-        
         {/* Title */}
-        <div className="text-center space-y-4">
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-600 drop-shadow-2xl">
-            EXIT ROOM BOT
-          </h1>
-          <p className="text-zinc-500 tracking-[0.3em] text-sm md:text-base font-light">
-            ADVANCED AI INTERFACE
-          </p>
-        </div>
+        <h1 className="text-4xl md:text-6xl font-black tracking-[0.1em] text-white uppercase drop-shadow-2xl text-center">
+          EXITROOM BOT
+        </h1>
 
-        {/* Central Control */}
-        <div className="relative group">
-          {/* Outer Ring Glow */}
-          <div className={`absolute inset-0 rounded-full blur-3xl transition-all duration-700 ${
-            isConnected ? 'bg-cyan-500/30 group-hover:bg-cyan-400/40' : 'bg-zinc-800/20 group-hover:bg-zinc-700/30'
-          }`} />
+        {/* Central Control Button */}
+        <div className="relative">
+          {/* Pulse Effect behind button */}
+          <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full transition-all duration-1000 ${isConnected ? 'bg-cyan-500/10 blur-3xl' : 'bg-transparent'}`} />
 
           <motion.button
             onClick={isConnected || isConnecting ? handleStop : handleStart}
             disabled={isConnecting}
             whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            whileTap={{ scale: 0.95 }}
             className={`
-              relative w-72 h-72 md:w-96 md:h-96 rounded-full flex flex-col items-center justify-center
-              border backdrop-blur-sm transition-all duration-500
-              ${isConnected 
-                ? 'border-cyan-500/50 bg-black/60 shadow-[0_0_60px_-15px_rgba(6,182,212,0.5)]' 
-                : 'border-zinc-700/50 bg-black/80 hover:border-zinc-500/50 hover:bg-zinc-900/50 shadow-[0_0_40px_-10px_rgba(255,255,255,0.1)]'}
+              relative w-64 h-64 md:w-80 md:h-80 rounded-full flex flex-col items-center justify-center
+              border-[3px] backdrop-blur-sm transition-all duration-300 flex-shrink-0
+              ${isConnected
+                ? 'border-red-500/50 bg-red-950/20 hover:bg-red-900/30 shadow-[0_0_50px_-10px_rgba(220,38,38,0.3)]'
+                : 'border-cyan-500/50 bg-cyan-950/20 hover:bg-cyan-900/30 shadow-[0_0_50px_-10px_rgba(8,145,178,0.3)]'}
+              ${isConnecting ? 'opacity-70 cursor-wait' : ''}
             `}
           >
-            {/* Animated Rings */}
+            {/* Inner Ring Animation when speaking */}
             {isConnected && (
-              <>
-                 <motion.div
-                  className="absolute inset-0 rounded-full border border-cyan-500/30"
-                  animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0, 0.3] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                 />
-                 <motion.div
-                  className="absolute inset-4 rounded-full border border-cyan-400/20"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                 />
-              </>
+              <motion.div
+                className="absolute inset-2 rounded-full border border-cyan-400/30"
+                animate={{
+                  scale: isSpeaking ? [1, 1.05, 1] : 1,
+                  opacity: isSpeaking ? 0.8 : 0.2,
+                  borderColor: isSpeaking ? 'rgba(34, 211, 238, 0.6)' : 'rgba(34, 211, 238, 0.2)'
+                }}
+                transition={{ duration: 0.4 }}
+              />
             )}
 
             {/* Icon & Label */}
-            <div className="flex flex-col items-center gap-6 z-20">
+            <div className="flex flex-col items-center gap-5 z-20">
               {isConnecting ? (
-                <Activity className="w-24 h-24 text-cyan-500 animate-pulse" strokeWidth={1} />
+                <Activity className="w-20 h-20 text-cyan-400 animate-pulse" strokeWidth={1.5} />
               ) : isConnected ? (
                 <>
-                  <motion.div
-                    animate={{ scale: isSpeaking ? 1.1 : 1 }}
-                    className="relative"
-                  >
-                    <div className="absolute inset-0 bg-red-500/20 blur-xl rounded-full" />
-                    <Square className="w-24 h-24 text-red-500 fill-red-500/10 relative z-10" strokeWidth={1.5} />
-                  </motion.div>
-                  <span className="text-2xl font-bold tracking-[0.2em] text-red-500 drop-shadow-lg">
-                    TERMINATE
+                  <Square className="w-20 h-20 text-red-500 fill-red-500/20" strokeWidth={1.5} />
+                  <span className="text-3xl font-bold tracking-widest text-red-500">
+                    STOP
                   </span>
                 </>
               ) : (
                 <>
-                  <div className="relative group-hover:text-cyan-400 transition-colors">
-                    <Power className={`w-32 h-32 ${isConnected ? 'text-cyan-500' : 'text-zinc-400 group-hover:text-cyan-400'}`} strokeWidth={1} />
-                  </div>
-                  <span className={`text-3xl font-bold tracking-[0.2em] transition-colors ${isConnected ? 'text-cyan-500' : 'text-zinc-300 group-hover:text-cyan-300'}`}>
-                    INITIALIZE
+                  <Power className="w-24 h-24 text-cyan-400" strokeWidth={1} />
+                  <span className="text-3xl font-bold tracking-widest text-cyan-400">
+                    START
                   </span>
                 </>
               )}
@@ -147,69 +106,21 @@ export default function Home() {
           </motion.button>
         </div>
 
-        {/* Status Indicators */}
-        <div className="h-12 flex items-center justify-center">
-          <AnimatePresence mode="wait">
-            {connectionError ? (
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-red-950/50 border border-red-900/50 text-red-400"
-              >
-                <div className="w-2 h-2 rounded-full bg-red-500" />
-                <span className="text-sm tracking-wide font-medium">{connectionError}</span>
-              </motion.div>
-            ) : isConnected && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="flex items-center gap-3 px-6 py-3 rounded-full bg-cyan-950/30 border border-cyan-900/30 backdrop-blur-md"
-              >
-                {isSpeaking ? (
-                  <>
-                    <div className="flex gap-1 h-4 items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="w-1 bg-cyan-400 rounded-full"
-                          animate={{ height: [4, 16, 4] }}
-                          transition={{ 
-                            duration: 0.5, 
-                            repeat: Infinity, 
-                            delay: i * 0.1,
-                            ease: "easeInOut"
-                          }}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-cyan-400 text-sm tracking-widest font-semibold ml-2">TRANSMITTING...</span>
-                  </>
-                ) : (
-                  <>
-                    <div className="w-3 h-3 rounded-full bg-cyan-500/50 animate-pulse" />
-                    <span className="text-cyan-500/70 text-sm tracking-widest">LISTENING</span>
-                  </>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+        {/* Error Message Only (No other status text) */}
+        <AnimatePresence>
+          {connectionError && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="text-red-500 font-mono text-sm tracking-wider bg-red-950/50 px-4 py-2 rounded border border-red-900/50"
+            >
+              ERROR: {connectionError}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
       </div>
-
-      {/* Footer */}
-      <footer className="z-10 w-full max-w-5xl flex justify-between items-end pb-4 text-xs text-zinc-800 uppercase tracking-widest">
-        <div>
-          SECURE CONNECTION
-          <br />
-          ENCRYPTED VIA ELEVENLABS
-        </div>
-        <div className="text-right">
-          ID: {process.env.NEXT_PUBLIC_AGENT_ID || 'UNKNOWN'}
-        </div>
-      </footer>
     </main>
   );
 }
